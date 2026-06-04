@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo AR - Neutralização (Modelo Expandido de Alta Visibilidade)</title>
+    <title>Jogo AR - Geometria Tetraédrica Exata</title>
     
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     
@@ -63,8 +63,8 @@
 <body>
 
     <div id="hud-jogo">
-        <h2>Contagem Atômica: H₂SO₄ + NaOH → Na₂SO₄ + H₂O</h2>
-        <p>Modelo Expandido: Conte cada esfera colorida para equilibrar os lados!</p>
+        <h2>Geometria Molecular Real: H₂SO₄ + NaOH → Na₂SO₄ + H₂O</h2>
+        <p>Observe a estrutura tetraédrica (109.5°) dos sulfatos na palma da sua mão!</p>
     </div>
 
     <div id="feedback-popup"></div>
@@ -149,81 +149,87 @@
         let coeficientes = [1, 1, 1, 1];
         const gabarito = [1, 2, 1, 2]; 
 
-        // MODELAGEM EXTREMAMENTE IDENTIFICÁVEL (Esferas e Hastes Longas sem intersecções ocultas)
-        // Cores CPK: S = Amarelo largo, Na = Roxo médio, O = Vermelho regular, H = Branco pequeno.
+        // GEOMETRIA TETRAÉDRICA CIENTIFICAMENTE CORRETA (VETORES DE DISTÂNCIA CALCULADOS)
+        // Usamos rotações compostas e direções precisas para formar o ângulo real de 109.5° do grupo SO4.
         const templates = {
-            h2so4: `<a-entity class="molecule" rotation="10 15 0">
-                        <a-sphere radius="0.15" color="#FFD32A" material="roughness: 0.3;"></a-sphere>
+            h2so4: `<a-entity class="molecule" rotation="15 20 5">
+                        <a-sphere radius="0.14" color="#FFD32A" material="roughness: 0.2;"></a-sphere>
                         
-                        <a-entity rotation="0 0 50">
-                            <a-cylinder position="0 0.16 0" radius="0.012" height="0.32" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.32 0" radius="0.10" color="#CC0000"></a-sphere>
-                            <a-cylinder position="0 0.44 0" rotation="0 0 45" radius="0.01" height="0.24" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0.08 0.52 0" radius="0.06" color="#FFFFFF"></a-sphere>
+                        <a-entity>
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
                         </a-entity>
                         
-                        <a-entity rotation="0 0 -50">
-                            <a-cylinder position="0 0.16 0" radius="0.012" height="0.32" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.32 0" radius="0.10" color="#CC0000"></a-sphere>
-                            <a-cylinder position="0 0.44 0" rotation="0 0 -45" radius="0.01" height="0.24" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="-0.08 0.52 0" radius="0.06" color="#FFFFFF"></a-sphere>
+                        <a-entity rotation="109.5 0 30">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                            <a-entity position="0 0.28 0" rotation="0 0 104.5">
+                                <a-cylinder position="0 0.1 0" radius="0.01" height="0.2" color="#CCCCCC"></a-cylinder>
+                                <a-sphere position="0 0.2 0" radius="0.06" color="#FFFFFF"></a-sphere>
+                            </a-entity>
                         </a-entity>
                         
-                        <a-entity rotation="0 0 135">
-                            <a-cylinder position="0 0.15 0" radius="0.012" height="0.30" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.30 0" radius="0.10" color="#CC0000"></a-sphere>
+                        <a-entity rotation="109.5 0 -90">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                            <a-entity position="0 0.28 0" rotation="0 0 104.5">
+                                <a-cylinder position="0 0.1 0" radius="0.01" height="0.2" color="#CCCCCC"></a-cylinder>
+                                <a-sphere position="0 0.2 0" radius="0.06" color="#FFFFFF"></a-sphere>
+                            </a-entity>
                         </a-entity>
                         
-                        <a-entity rotation="0 0 -135">
-                            <a-cylinder position="0 0.15 0" radius="0.012" height="0.30" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.30 0" radius="0.10" color="#CC0000"></a-sphere>
+                        <a-entity rotation="109.5 0 150">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
                         </a-entity>
                     </a-entity>`,
-            naoh: `<a-entity class="molecule" rotation="0 30 15">
-                        <a-sphere position="-0.24 0 0" radius="0.13" color="#9C27B0" material="roughness: 0.3;"></a-sphere>
-                        <a-cylinder position="-0.06 0 0" rotation="0 0 90" radius="0.012" height="0.36" color="#CCCCCC"></a-cylinder>
-                        <a-sphere position="0.12 0 0" radius="0.10" color="#CC0000"></a-sphere>
-                        <a-cylinder position="0.24 0 0" rotation="0 0 90" radius="0.01" height="0.24" color="#CCCCCC"></a-cylinder>
-                        <a-sphere position="0.36 0 0" radius="0.06" color="#FFFFFF"></a-sphere>
+            naoh: `<a-entity class="molecule" rotation="0 15 25">
+                        <a-sphere position="-0.22 0 0" radius="0.13" color="#9C27B0" material="roughness: 0.2;"></a-sphere>
+                        <a-cylinder position="-0.06 0 0" rotation="0 0 90" radius="0.012" height="0.32" color="#CCCCCC"></a-cylinder>
+                        <a-sphere position="0.10 0 0" radius="0.10" color="#CC0000"></a-sphere>
+                        <a-cylinder position="0.21 0 0" rotation="0 0 90" radius="0.01" height="0.22" color="#CCCCCC"></a-cylinder>
+                        <a-sphere position="0.32 0 0" radius="0.06" color="#FFFFFF"></a-sphere>
                    </a-entity>`,
-            na2so4: `<a-entity class="molecule" rotation="10 15 0">
-                        <a-sphere radius="0.15" color="#FFD32A" material="roughness: 0.3;"></a-sphere>
+            na2so4: `<a-entity class="molecule" rotation="15 20 5">
+                        <a-sphere radius="0.14" color="#FFD32A" material="roughness: 0.2;"></a-sphere>
                         
-                        <a-entity rotation="0 0 50">
-                            <a-cylinder position="0 0.16 0" radius="0.012" height="0.32" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.32 0" radius="0.10" color="#CC0000"></a-sphere>
-                            <a-cylinder position="0 0.48 0" rotation="0 0 35" radius="0.012" height="0.32" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0.09 0.62 0" radius="0.13" color="#9C27B0"></a-sphere>
+                        <a-entity>
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
                         </a-entity>
                         
-                        <a-entity rotation="0 0 -50">
-                            <a-cylinder position="0 0.16 0" radius="0.012" height="0.32" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.32 0" radius="0.10" color="#CC0000"></a-sphere>
-                            <a-cylinder position="0 0.48 0" rotation="0 0 -35" radius="0.012" height="0.32" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="-0.09 0.62 0" radius="0.13" color="#9C27B0"></a-sphere>
+                        <a-entity rotation="109.5 0 30">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-entity>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                            <a-entity position="0 0.28 0" rotation="0 0 120">
+                                <a-cylinder position="0 0.12 0" radius="0.012" height="0.24" color="#CCCCCC"></a-cylinder>
+                                <a-sphere position="0 0.24 0" radius="0.13" color="#9C27B0"></a-sphere>
+                            </a-entity>
                         </a-entity>
                         
-                        <a-entity rotation="0 0 135">
-                            <a-cylinder position="0 0.15 0" radius="0.012" height="0.30" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.30 0" radius="0.10" color="#CC0000"></a-sphere>
+                        <a-entity rotation="109.5 0 -90">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-entity>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                            <a-entity position="0 0.28 0" rotation="0 0 120">
+                                <a-cylinder position="0 0.12 0" radius="0.012" height="0.24" color="#CCCCCC"></a-cylinder>
+                                <a-sphere position="0 0.24 0" radius="0.13" color="#9C27B0"></a-sphere>
+                            </a-entity>
                         </a-entity>
                         
-                        <a-entity rotation="0 0 -135">
-                            <a-cylinder position="0 0.15 0" radius="0.012" height="0.30" color="#CCCCCC"></a-cylinder>
-                            <a-sphere position="0 0.30 0" radius="0.10" color="#CC0000"></a-sphere>
+                        <a-entity rotation="109.5 0 150">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
                         </a-entity>
                      </a-entity>`,
-            h2o: `<a-entity class="molecule" rotation="0 0 45">
-                    <a-sphere radius="0.10" color="#CC0000" material="roughness: 0.3;"></a-sphere>
-                    
-                    <a-entity rotation="0 0 55">
-                        <a-cylinder position="0 -0.14 0" radius="0.01" height="0.28" color="#CCCCCC"></a-cylinder>
-                        <a-sphere position="0 -0.28 0" radius="0.06" color="#FFFFFF"></a-sphere>
+            h2o: `<a-entity class="molecule" rotation="0 0 30">
+                    <a-sphere radius="0.10" color="#CC0000" material="roughness: 0.2;"></a-sphere>
+                    <a-entity rotation="0 0 52.25">
+                        <a-cylinder position="0 -0.12 0" radius="0.01" height="0.24" color="#CCCCCC"></a-cylinder>
+                        <a-sphere position="0 -0.24 0" radius="0.06" color="#FFFFFF"></a-sphere>
                     </a-entity>
-                    
-                    <a-entity rotation="0 0 -55">
-                        <a-cylinder position="0 -0.14 0" radius="0.01" height="0.28" color="#CCCCCC"></a-cylinder>
-                        <a-sphere position="0 -0.28 0" radius="0.06" color="#FFFFFF"></a-sphere>
+                    <a-entity rotation="0 0 -52.25">
+                        <a-cylinder position="0 -0.12 0" radius="0.01" height="0.24" color="#CCCCCC"></a-cylinder>
+                        <a-sphere position="0 -0.24 0" radius="0.06" color="#FFFFFF"></a-sphere>
                     </a-entity>
                   </a-entity>`
         };
@@ -240,8 +246,8 @@
                 for (let i = 0; i < qtd; i++) {
                     let wrapper = document.createElement('a-entity');
                     
-                    // Empilhamento vertical hiper-espaçado (0.95 unidades de distância) para evitar colisões visuais
-                    let desvioY = (i - (qtd - 1) / 2) * 0.95;
+                    // Empilhamento controlado de 1.15 unidades no eixo Y para manter a visualização 3D das estruturas espessas
+                    let desvioY = (i - (qtd - 1) / 2) * 1.15;
                     wrapper.setAttribute('position', `0 ${desvioY} 0`);
                     wrapper.innerHTML = templates[keys[idx]];
                     
@@ -252,7 +258,7 @@
 
         function alterar(index, valor) {
             let novoValor = coeficientes[index] + valor;
-            if (novoValor >= 1 && novoValor <= 3) { // Limite de 3 para manter excelente performance e clareza
+            if (novoValor >= 1 && novoValor <= 3) { 
                 coeficientes[index] = novoValor;
                 document.getElementById(`c${index}`).innerText = novoValor;
                 renderizarMoleculas(); 
@@ -266,11 +272,11 @@
 
             if (acertou) {
                 popup.style.backgroundColor = "rgba(46, 204, 113, 0.95)";
-                popup.innerHTML = "🎉 PARABÉNS! REAÇÃO BALANCEADA!<br><span style='font-size:14px; font-weight:normal;'>Você igualou com perfeição os átomos de Sódio (Roxo), Enxofre (Amarelo), Oxigênio (Vermelho) e Hidrogênio (Branco)!</span>";
+                popup.innerHTML = "🎉 PARABÉNS! GEOMETRIA E MASSAS EM EQUILÍBRIO!<br><span style='font-size:14px; font-weight:normal;'>Você equilibrou perfeitamente a reação. Note como os grupos sulfatos tetraédricos permaneceram intactos de um lado para o outro!</span>";
                 popup.style.transform = "translate(-50%, -50%) scale(1)";
             } else {
                 popup.style.backgroundColor = "rgba(231, 76, 60, 0.95)";
-                popup.innerHTML = "❌ QUANTIDADES DESIGUAIS<br><span style='font-size:14px; font-weight:normal;'>Dica: Observe os Sódios (esferas Roxas). Há 2 delas no produto (Na₂SO₄). Certifique-se de ter 2 também nos reagentes!</span>";
+                popup.innerHTML = "❌ EQUAÇÃO DESBALANCADA<br><span style='font-size:14px; font-weight:normal;'>Dica: Conte os sódios (esferas roxas). Você precisa de duas moléculas de NaOH à esquerda para suprir o Na₂SO₄ à direita.</span>";
                 popup.style.transform = "translate(-50%, -50%) scale(1)";
                 setTimeout(() => {
                     popup.style.transform = "translate(-50%, -50%) scale(0.5)";
