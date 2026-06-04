@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo AR - Neutralização Ácido-Base</title>
+    <title>Jogo AR - Geometria Tetraédrica Exata</title>
     
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     
@@ -12,8 +12,23 @@
 
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-color: #000; }
-        #canvas-container { position: absolute; width: 100%; height: 100%; z-index: 1; }
-        video { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 0; transform: scaleX(-1); }
+        
+        /* CORREÇÃO DE CAMADAS: Garante que a webcam fique visível no fundo */
+        video { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            z-index: 0; 
+            transform: scaleX(-1); 
+        }
+        
+        #canvas-container { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 1; 
+        }
         
         #hud-jogo {
             position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
@@ -62,6 +77,8 @@
 </head>
 <body>
 
+    <video id="webcam" autoplay playsinline></video>
+
     <div id="hud-jogo">
         <h2>Geometria Molecular Real: H₂SO₄ + NaOH → Na₂SO₄ + H₂O</h2>
         <p>Observe a estrutura tetraédrica (109.5°) dos sulfatos na palma da sua mão!</p>
@@ -106,8 +123,6 @@
         </div>
         <button id="btn-verificar" onclick="verificarGabarito()">Verificar Balanceamento</button>
     </div>
-    
-    <video id="webcam" autoplay playsinline></video>
 
     <div id="canvas-container">
         <a-scene embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -149,16 +164,14 @@
         let coeficientes = [1, 1, 1, 1];
         const gabarito = [1, 2, 1, 2]; 
 
-        // ROTAÇÕES AJUSTADAS PARA AS GEOMETRIAS REAIS (TETRAEDRO 109.5° E ÁGUA 104.5°)
+        // GEOMETRIA REAL DOS SULFATO (TETRAEDRO 109.5°) E ÁGUA ANGULAR (104.5°)
         const templates = {
             h2so4: `<a-entity class="molecule" rotation="15 20 5">
                         <a-sphere radius="0.14" color="#FFD32A" material="roughness: 0.2;"></a-sphere>
-                        
                         <a-entity>
                             <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
                             <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
                         </a-entity>
-                        
                         <a-entity rotation="109.5 0 30">
                             <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
                             <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
@@ -167,7 +180,6 @@
                                 <a-sphere position="0 0.2 0" radius="0.06" color="#FFFFFF"></a-sphere>
                             </a-entity>
                         </a-entity>
-                        
                         <a-entity rotation="109.5 0 -90">
                             <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
                             <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
@@ -176,7 +188,6 @@
                                 <a-sphere position="0 0.2 0" radius="0.06" color="#FFFFFF"></a-sphere>
                             </a-entity>
                         </a-entity>
-                        
                         <a-entity rotation="109.5 0 150">
                             <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
                             <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
@@ -190,3 +201,140 @@
                         <a-sphere position="0.32 0 0" radius="0.06" color="#FFFFFF"></a-sphere>
                    </a-entity>`,
             na2so4: `<a-entity class="molecule" rotation="15 20 5">
+                        <a-sphere radius="0.14" color="#FFD32A" material="roughness: 0.2;"></a-sphere>
+                        <a-entity>
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                        </a-entity>
+                        <a-entity rotation="109.5 0 30">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                            <a-entity position="0 0.28 0" rotation="0 0 120">
+                                <a-cylinder position="0 0.12 0" radius="0.012" height="0.24" color="#CCCCCC"></a-cylinder>
+                                <a-sphere position="0 0.24 0" radius="0.13" color="#9C27B0"></a-sphere>
+                            </a-entity>
+                        </a-entity>
+                        <a-entity rotation="109.5 0 -90">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                            <a-entity position="0 0.28 0" rotation="0 0 120">
+                                <a-cylinder position="0 0.12 0" radius="0.012" height="0.24" color="#CCCCCC"></a-cylinder>
+                                <a-sphere position="0 0.24 0" radius="0.13" color="#9C27B0"></a-sphere>
+                            </a-entity>
+                        </a-entity>
+                        <a-entity rotation="109.5 0 150">
+                            <a-cylinder position="0 0.14 0" radius="0.012" height="0.28" color="#CCCCCC"></a-cylinder>
+                            <a-sphere position="0 0.28 0" radius="0.10" color="#CC0000"></a-sphere>
+                        </a-entity>
+                     </a-entity>`,
+            h2o: `<a-entity class="molecule" rotation="0 0 30">
+                    <a-sphere radius="0.10" color="#CC0000" material="roughness: 0.2;"></a-sphere>
+                    <a-entity rotation="0 0 52.25">
+                        <a-cylinder position="0 -0.12 0" radius="0.01" height="0.24" color="#CCCCCC"></a-cylinder>
+                        <a-sphere position="0 -0.24 0" radius="0.06" color="#FFFFFF"></a-sphere>
+                    </a-entity>
+                    <a-entity rotation="0 0 -52.25">
+                        <a-cylinder position="0 -0.12 0" radius="0.01" height="0.24" color="#CCCCCC"></a-cylinder>
+                        <a-sphere position="0 -0.24 0" radius="0.06" color="#FFFFFF"></a-sphere>
+                    </a-entity>
+                  </a-entity>`
+        };
+
+        function renderizarMoleculas() {
+            const IDs = ['grupo-h2so4', 'grupo-naoh', 'grupo-na2so4', 'grupo-h2o'];
+            const keys = ['h2so4', 'naoh', 'na2so4', 'h2o'];
+
+            IDs.forEach((id, idx) => {
+                const conteiner = document.getElementById(id);
+                conteiner.innerHTML = ''; 
+
+                let qtd = coeficientes[idx];
+                for (let i = 0; i < qtd; i++) {
+                    let wrapper = document.createElement('a-entity');
+                    
+                    // Empilhamento dinâmico hiperespaçado (1.15) para evitar colisões
+                    let desvioY = (i - (qtd - 1) / 2) * 1.15;
+                    wrapper.setAttribute('position', `0 ${desvioY} 0`);
+                    wrapper.innerHTML = templates[keys[idx]];
+                    
+                    conteiner.appendChild(wrapper);
+                }
+            });
+        }
+
+        function alterar(index, valor) {
+            let novoValor = coeficientes[index] + valor;
+            if (novoValor >= 1 && novoValor <= 3) { 
+                coeficientes[index] = novoValor;
+                document.getElementById(`c${index}`).innerText = novoValor;
+                renderizarMoleculas(); 
+            }
+        }
+
+        function verificarGabarito() {
+            const popup = document.getElementById('feedback-popup');
+            popup.style.display = 'block';
+            let acertou = coeficientes.every((val, index) => val === gabarito[index]);
+
+            if (acertou) {
+                popup.style.backgroundColor = "rgba(46, 204, 113, 0.95)";
+                popup.innerHTML = "🎉 PARABÉNS! REAÇÃO BALANCEADA!<br><span style='font-size:14px; font-weight:normal;'>Você igualou com perfeição os átomos de Sódio (Roxo), Enxofre (Amarelo), Oxigênio (Vermelho) e Hidrogênio (Branco)!</span>";
+                popup.style.transform = "translate(-50%, -50%) scale(1)";
+            } else {
+                popup.style.backgroundColor = "rgba(231, 76, 60, 0.95)";
+                popup.innerHTML = "❌ EQUAÇÃO DESBALANCADA<br><span style='font-size:14px; font-weight:normal;'>Dica: Observe os sódios (esferas roxas). Você precisa de duas moléculas de NaOH à esquerda para suprir o Na₂SO₄ à direita.</span>";
+                popup.style.transform = "translate(-50%, -50%) scale(1)";
+                setTimeout(() => {
+                    popup.style.transform = "translate(-50%, -50%) scale(0.5)";
+                    popup.style.display = 'none';
+                }, 4000);
+            }
+        }
+
+        window.onload = renderizarMoleculas;
+
+        // --- INICIALIZAÇÃO DA CÂMARA E TRATAMENTO DE ERROS ATUALIZADO ---
+        const videoElement = document.getElementById('webcam');
+        const filtroReacao = document.getElementById('filtro-reacao');
+
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+        });
+
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
+        hands.onResults(onResults);
+
+        const camera = new Camera(videoElement, {
+            onFrame: async () => { await hands.send({image: videoElement}); },
+            width: 1280, height: 720
+        });
+        
+        // Ativação forçada capturando falhas de hardware ou falta de permissão
+        camera.start().catch(err => {
+            console.error("Falha ao inicializar câmara: ", err);
+            alert("Atenção: A câmara não pôde ser iniciada. Verifique se deu permissão de acesso à câmara no seu navegador ou se o link foi aberto em ambiente HTTPS estável.");
+        });
+
+        function onResults(results) {
+            const sceneEl = document.querySelector('a-scene');
+            if (sceneEl && sceneEl.renderer) { sceneEl.renderer.setClearColor(0x000000, 0); }
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                const isHandOpen = landmarks[8].y < landmarks[6].y && landmarks[12].y < landmarks[10].y && landmarks[16].y < landmarks[14].y && landmarks[20].y < landmarks[18].y;
+
+                if (isHandOpen) {
+                    const handX = (landmarks[9].x - 0.5) * 2.5; 
+                    const handY = (landmarks[9].y - 0.5) * -2.5;
+                    filtroReacao.setAttribute('position', `${handX} ${handY} -2.8`);
+                    filtroReacao.setAttribute('visible', 'true');
+                } else {
+                    filtroReacao.setAttribute('visible', 'false');
+                }
+            } else {
+                filtroReacao.setAttribute('visible', 'false');
+            }
+        }
+    </script>
+</body>
+</html>
