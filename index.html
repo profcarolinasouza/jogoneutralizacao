@@ -6,14 +6,13 @@
     <title>Jogo AR - Geometria Tetraédrica Exata</title>
     
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background-color: #000; }
         
-        /* CORREÇÃO DE CAMADAS: Garante que a webcam fique visível no fundo */
+        /* Garante que a webcam fique visível ao fundo */
         video { 
             position: absolute; 
             width: 100%; 
@@ -28,6 +27,11 @@
             width: 100%; 
             height: 100%; 
             z-index: 1; 
+            pointer-events: none; /* Permite interagir com os botões por trás do canvas */
+        }
+
+        a-scene {
+            pointer-events: auto; /* Devolve a interação apenas para a cena se necessário */
         }
         
         #hud-jogo {
@@ -125,6 +129,7 @@
     </div>
 
     <div id="canvas-container">
+        <!-- O VR-mode e o loading do A-Frame foram desativados para uma experiência limpa em AR -->
         <a-scene embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
             <a-camera position="0 0 0" look-controls="enabled: false" wasd-controls="enabled: false"></a-camera>
 
@@ -164,7 +169,7 @@
         let coeficientes = [1, 1, 1, 1];
         const gabarito = [1, 2, 1, 2]; 
 
-        // GEOMETRIA REAL DOS SULFATO (TETRAEDRO 109.5°) E ÁGUA ANGULAR (104.5°)
+        // GEOMETRIA REAL DO SULFATO (TETRAEDRO 109.5°) E ÁGUA ANGULAR (104.5°)
         const templates = {
             h2so4: `<a-entity class="molecule" rotation="15 20 5">
                         <a-sphere radius="0.14" color="#FFD32A" material="roughness: 0.2;"></a-sphere>
@@ -246,6 +251,7 @@
 
             IDs.forEach((id, idx) => {
                 const conteiner = document.getElementById(id);
+                if (!conteiner) return;
                 conteiner.innerHTML = ''; 
 
                 let qtd = coeficientes[idx];
@@ -284,58 +290,85 @@
                 popup.style.backgroundColor = "rgba(231, 76, 60, 0.95)";
                 popup.innerHTML = "❌ EQUAÇÃO DESBALANCADA<br><span style='font-size:14px; font-weight:normal;'>Dica: Observe os sódios (esferas roxas). Você precisa de duas moléculas de NaOH à esquerda para suprir o Na₂SO₄ à direita.</span>";
                 popup.style.transform = "translate(-50%, -50%) scale(1)";
-    
             }
+            
             setTimeout(() => {
                 popup.style.transform = "translate(-50%, -50%) scale(0.5)";
                 popup.style.display = 'none';
-            }, 3000);
+            }, 4000);
         }
-        }
 
-        window.onload = renderizarMoleculas;
+        window.onload = () => {
+            renderizarMoleculas();
+            inicializarAR();
+        };
 
-        // --- INICIALIZAÇÃO DA CÂMARA E TRATAMENTO DE ERROS ATUALIZADO ---
-        const videoElement = document.getElementById('webcam');
-        const filtroReacao = document.getElementById('filtro-reacao');
+        // --- INICIALIZAÇÃO DA CÂMERA E INTEGRAÇÃO MEDIAPIPE ---
+        let suavizacaoX = 0;
+        let suavizacaoY = 0;
+        const fatorFiltro = 0.25; // Quanto menor, mais suave (e mais lento) o movimento das moléculas
 
-        const hands = new Hands({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-        });
+        function inicializarAR() {
+            const videoElement = document.getElementById('webcam');
+            const filtroReacao = document.getElementById('filtro-reacao');
 
-        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
-        hands.onResults(onResults);
+            const hands = new Hands({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+            });
 
-        const camera = new Camera(videoElement, {
-            onFrame: async () => { await hands.send({image: videoElement}); },
-            width: 1280, height: 720
-        });
-        
-        // Ativação forçada capturando falhas de hardware ou falta de permissão
-        camera.start().catch(err => {
-            console.error("Falha ao inicializar câmara: ", err);
-            alert("Atenção: A câmara não pôde ser iniciada. Verifique se deu permissão de acesso à câmara no seu navegador ou se o link foi aberto em ambiente HTTPS estável.");
-        });
+            hands.setOptions({ 
+                maxNumHands: 1, 
+                modelComplexity: 1, 
+                minDetectionConfidence: 0.6, 
+                minTrackingConfidence: 0.6 
+            });
 
-        function onResults(results) {
-            const sceneEl = document.querySelector('a-scene');
-            if (sceneEl && sceneEl.renderer) { sceneEl.renderer.setClearColor(0x000000, 0); }
+            hands.onResults((results) => {
+                const sceneEl = document.querySelector('a-scene');
+                if (sceneEl && sceneEl.renderer) { 
+                    sceneEl.renderer.setClearColor(0x000000, 0); 
+                }
 
-            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-                const landmarks = results.multiHandLandmarks[0];
-                const isHandOpen = landmarks[8].y < landmarks[6].y && landmarks[12].y < landmarks[10].y && landmarks[16].y < landmarks[14].y && landmarks[20].y < landmarks[18].y;
+                if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                    const landmarks = results.multiHandLandmarks[0];
+                    
+                    // Verifica se a mão está aberta comparando pontas dos dedos com as juntas anteriores
+                    const isHandOpen = landmarks[8].y < landmarks[6].y && 
+                                       landmarks[12].y < landmarks[10].y && 
+                                       landmarks[16].y < landmarks[14].y && 
+                                       landmarks[20].y < landmarks[18].y;
 
-                if (isHandOpen) {
-                    const handX = (landmarks[9].x - 0.5) * 2.5; 
-                    const handY = (landmarks[9].y - 0.5) * -2.5;
-                    filtroReacao.setAttribute('position', `${handX} ${handY} -2.8`);
-                    filtroReacao.setAttribute('visible', 'true');
+                    if (isHandOpen) {
+                        // Inverte o eixo X para compensar o efeito espelho da webcam
+                        const alvoX = (0.5 - landmarks[9].x) * 3.5; 
+                        const alvoY = (0.5 - landmarks[9].y) * 2.5;
+
+                        // Aplica o filtro de suavização para evitar tremores nas moléculas 3D
+                        suavizacaoX += (alvoX - suavizacaoX) * fatorFiltro;
+                        suavizacaoY += (alvoY - suavizacaoY) * fatorFiltro;
+
+                        filtroReacao.setAttribute('position', `${suavizacaoX} ${suavizacaoY} -2.8`);
+                        filtroReacao.setAttribute('visible', 'true');
+                    } else {
+                        filtroReacao.setAttribute('visible', 'false');
+                    }
                 } else {
                     filtroReacao.setAttribute('visible', 'false');
                 }
-            } else {
-                filtroReacao.setAttribute('visible', 'false');
-            }
+            });
+
+            const camera = new Camera(videoElement, {
+                onFrame: async () => { 
+                    await hands.send({image: videoElement}); 
+                },
+                width: 1280, 
+                height: 720
+            });
+            
+            camera.start().catch(err => {
+                console.error("Falha ao inicializar câmera: ", err);
+                alert("Atenção: A câmera não pôde ser iniciada. Certifique-se de aceitar as permissões de vídeo no navegador e que o ambiente de testes utiliza HTTPS.");
+            });
         }
     </script>
 </body>
