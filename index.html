@@ -284,11 +284,13 @@
                 popup.style.backgroundColor = "rgba(231, 76, 60, 0.95)";
                 popup.innerHTML = "❌ EQUAÇÃO DESBALANCADA<br><span style='font-size:14px; font-weight:normal;'>Dica: Observe os sódios (esferas roxas). Você precisa de duas moléculas de NaOH à esquerda para suprir o Na₂SO₄ à direita.</span>";
                 popup.style.transform = "translate(-50%, -50%) scale(1)";
-                setTimeout(() => {
-                    popup.style.transform = "translate(-50%, -50%) scale(0.5)";
-                    popup.style.display = 'none';
-                }, 4000);
+    
             }
+            setTimeout(() => {
+                popup.style.transform = "translate(-50%, -50%) scale(0.5)";
+                popup.style.display = 'none';
+            }, 3000);
+        }
         }
 
         window.onload = renderizarMoleculas;
